@@ -11,8 +11,7 @@ const puppeteer = require('puppeteer');
         await page.setViewport({ width: 1000, height: 600 });
         await page.goto('https://www.facebook.com');
         await page.waitForSelector('#email');
-        await page.type('#email', 'kravmaguyinfo@gmail.com');
-        await page.type('#pass', process.env.FB_PASSWORD);
+        await page.type('#email', 'kravmaguyinfo@gmail.com'); await page.type('#pass', process.env.FB_PASSWORD);
         await page.click(`[type="submit"]`);
         await page.waitForNavigation();
         await page.click(`div`); // this is because facebook leaves some black overlay if you log in with my chromium; it may not be the same for yours
@@ -20,13 +19,18 @@ const puppeteer = require('puppeteer');
         await page.goto('https://www.facebook.com/profile.php?id=100008770959917');
         await page.waitFor(3000)
         await page.click('div')
+
+        const button = await findButton(page, "what's on your mind?")
+        await button.click();
         await page.waitForSelector(
             `[aria-label="What's on your mind?"]`
         );
         await page.click(`[aria-label="What's on your mind?"]`);
         // type inside create post
+        await findButton(page, "What's on your mind")
+        await page.click(btn)
         let sentenceList = [
-            `Book martial arts and online training message me at https://www.facebook.com/kravmaguy/.`,
+            `message me about online training`,
         ];
 
         for (let j = 0; j < sentenceList.length; j++) {
@@ -51,3 +55,21 @@ const puppeteer = require('puppeteer');
         console.error(error);
     }
 })();
+
+async function findButton(page, buttonName) {
+    try {
+        const buttons = await page.$$('[role="button"]');
+        const regex = new RegExp(buttonName, "i");
+        console.log(regex);
+        for (const btn of buttons) {
+            const valueHandle = await btn.getProperty("innerText");
+            let text = await valueHandle.jsonValue();
+            if (regex.test(text)) {
+                console.log(text);
+                return btn;
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
