@@ -16,21 +16,22 @@ const puppeteer = require('puppeteer');
         await page.waitForNavigation();
         await page.click(`div`); // this is because facebook leaves some black overlay if you log in with my chromium; it may not be the same for yours
         await page.waitFor(5000)
-        await page.goto('https://www.facebook.com/profile.php?id=100008770959917');
+        await page.goto('https://www.facebook.com/groups/1230356534045928');
         await page.waitFor(3000)
         await page.click('div')
 
-        const button = await findButton(page, "what's on your mind?")
+        const button = await findButton(page, "Create a public post…")
         await button.click();
-        await page.waitForSelector(
-            `[aria-label="What's on your mind?"]`
-        );
-        await page.click(`[aria-label="What's on your mind?"]`);
+        // await page.waitForSelector(
+        //     `[aria-label="What's on your mind?"]`
+        // );
+        // await page.click(`[aria-label="What's on your mind?"]`);
         // type inside create post
-        await findButton(page, "What's on your mind")
-        await page.click(btn)
+        // await findButton(page, "What's on your mind")
+        // console.log('here')
+        // await page.click(btn)
         let sentenceList = [
-            `message me about online training`,
+            `this is a group page about commercial real estate for lease`,
         ];
 
         for (let j = 0; j < sentenceList.length; j++) {
@@ -45,7 +46,11 @@ const puppeteer = require('puppeteer');
                     await page.waitFor(4000);
 
                     console.log('done');
-                    await page.click(`[aria-label="What's on your mind?"]`);
+                    // await page.click(`[aria-label="What's on your mind?"]`);
+                    await page.click('div')
+
+                    await button.click();
+
                 }
             }
         }
